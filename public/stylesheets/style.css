@@ -1,0 +1,20 @@
+body {
+  background-color: #f6f6f1;
+  padding: 3rem;
+  font: 14px 'Libre Baskerville', serif; }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem; }
+  header h1 {
+    margin: 0; }
+
+a {
+  color: black;
+  text-decoration: none; }
+  a:hover, a:focus {
+    text-decoration: underline; }
+
+/*# sourceMappingURL=style.css.map */
