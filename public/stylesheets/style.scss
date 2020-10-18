@@ -1,7 +1,15 @@
 body {
     background-color: #f6f6f1;
-    padding: 3rem;
-    font: 14px 'Libre Baskerville', serif;;
+    font: 14px 'Libre Baskerville', serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1024px;
+    width: 90%;
+    margin: auto;
+    margin-top: 64px!important;
 }
 
 header {

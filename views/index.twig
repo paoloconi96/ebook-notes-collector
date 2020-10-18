@@ -1,9 +1,31 @@
 {% extends 'layout.twig' %}
 
+{% block stylesheets %}
+    <link rel='stylesheet' href='/stylesheets/index.css'/>
+{% endblock %}
+
 {% block main_actions %}
     <a href="/add">(Upload new book)</a>
 {% endblock %}
 
 {% block body %}
-    <p>Welcome to {{ title }}</p>
+    <ul class="books">
+        {% for book in books %}
+            <li class="book" id="book-{{ book.id }}">
+                <a href="">
+                    <img src="{{ book.imageLinks.thumbnail }}" alt="Cover" class="cover">
+                    <strong>{{ book.title }}</strong>
+                    <span>{{ book.authors }}</span>
+                    <span>{{ book.categories }}</span>
+                    <span>{{ book.publishedDate }}</span>
+                </a>
+            </li>
+        {% endfor %}
+
+        {% if books | length < 8 %}
+            {% for fake in range(0, 8 - books | length) %}
+                <li class="book" id="book-{{ book.id }}"></li>
+            {% endfor %}
+        {% endif %}
+    </ul>
 {% endblock %}

@@ -5,6 +5,7 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const { v4: uuidv4 } = require('uuid');
 const database = require('../utils/database');
+const googleBooks = require('../utils/google-books')
 
 router.get('/', async function (req, res, next) {
     res.render('add', {
@@ -47,19 +48,30 @@ router.post('/', function (req, res, next) {
                 index++;
             })
             .on('end', async () => {
+                const googleSearchResult = await googleBooks.searchFirstResult(book.title);
+
+                if (!googleSearchResult) {
+                    throw Error('stop');
+                }
+                const volumeInfo = googleSearchResult.volumeInfo;
+
                 const db = database.get();
 
                 const bookDocument = db.collection('books').doc(uuidv4());
-                await bookDocument.set(book);
+                await bookDocument.set({
+                    title: volumeInfo.title,
+                    authors: volumeInfo.authors,
+                    publishedDate: volumeInfo.publishedDate,
+                    categories: volumeInfo.categories,
+                    imageLinks: volumeInfo.imageLinks,
+                    hightlights: book.hightlights,
+                });
 
                 res.redirect('/add');
             })
         ;
     });
 });
-
-AIzaSyDo7l7QTTn1e523szT1lyUv8v-ErrE0S2g
-
 
 let book = {
     title: '',

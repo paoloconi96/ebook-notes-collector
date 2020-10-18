@@ -7,10 +7,12 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-<header>
-    <h1>{{ title }}</h1>
-    {% block main_actions %}{% endblock %}
-</header>
-{% block body %}{% endblock %}
-</body>
+    <section class="container">
+        <header>
+            <h1>{{ title }}</h1>
+            {% block main_actions %}{% endblock %}
+        </header>
+        {% block body %}{% endblock %}
+        </body>
+    </section>
 </html>

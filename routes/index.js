@@ -1,10 +1,23 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const database = require('../utils/database');
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', async (req, res, next) => {
+    const db = database.get();
+
+    let books = [];
+
+    const bookDocuments = db.collection('books');
+    const snapshot = await bookDocuments.get();
+    snapshot.forEach(doc => {
+        books.push(Object.assign({
+            id: doc.id,
+        }, doc.data()));
+    });
+
     res.render('index', {
-        title: 'My books collection'
+        title: 'My books collection',
+        books
     });
 });
 
