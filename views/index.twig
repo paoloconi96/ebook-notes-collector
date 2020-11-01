@@ -12,12 +12,11 @@
     <ul class="books">
         {% for book in books %}
             <li class="book" id="book-{{ book.id }}">
-                <a href="">
-                    <img src="{{ book.imageLinks.thumbnail }}" alt="Cover" class="cover">
-                    <strong>{{ book.title }}</strong>
-                    <span>{{ book.authors }}</span>
-                    <span>{{ book.categories }}</span>
-                    <span>{{ book.publishedDate }}</span>
+                <a href="/detail/{{ book.id }}">
+                    {% if book.imageLinks %}
+                        <img src="{{ book.imageLinks }}" alt="Cover" class="cover">
+                    {% endif %}
+                    <strong>{{ book.title }}</strong> • <span>{{ book.authors }}</span>
                 </a>
             </li>
         {% endfor %}

@@ -1,7 +1,6 @@
 {
-    "name": "ebook-highlights-collector",
-    "version": "1.0.0",
-    "private": true,
+    "name": "ebook-notes-collector",
+    "version": "0.0.1",
     "author": "Paolo Conizzoli",
     "scripts": {
         "start": "node ./bin/www"
@@ -14,6 +13,7 @@
         "express": "~4.16.1",
         "firebase": "^7.24.0",
         "firebase-admin": "^9.2.0",
+        "google-books-search": "^0.3.1",
         "http-errors": "~1.6.3",
         "morgan": "~1.9.1",
         "multiparty": "^4.2.2",

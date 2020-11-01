@@ -26,6 +26,17 @@ googleBooks.search = query => {
                 body = JSON.parse(body);
 
                 if (response.statusCode === 200) {
+                    body.items.forEach(item => {
+                        if (
+                            !item.volumeInfo ||
+                            !item.volumeInfo.imageLinks
+                        ) {
+                            return;
+                        }
+
+                        item.volumeInfo.imageLinks.thumbnail = item.volumeInfo.imageLinks.thumbnail.replace('zoom=1', 'zoom=4');
+                    });
+
                     resolve(body);
                     return;
                 }

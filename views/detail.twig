@@ -1,0 +1,44 @@
+{% extends 'layout.twig' %}
+
+{% block stylesheets %}
+    <link rel='stylesheet' href='/stylesheets/detail.css'/>
+{% endblock %}
+
+{% block main_actions %}
+    <a href="/add">(Upload new book)</a>
+{% endblock %}
+
+{% block body %}
+    <main class="book">
+        <section class="info">
+            {% if book.imageLinks %}
+                <img src="{{ book.imageLinks }}" alt="Cover" class="cover">
+            {% endif %}
+            <h2>{{ book.title }}</h2>
+            <h3>{{ book.authors }}</h3>
+        </section>
+        <section class="notes">
+            <ul>
+                {% for note in book.hightlights %}
+                    {% set previousNote = book.hightlights[loop.index0 - 1] %}
+                    {% if not previousNote or note.location != previousNote.location %}
+                        <li class="note" id="note-{{ note.location }}">
+                        <em>Position: {{ note.location }}</em>
+                        <a class="note-link" href="/detail/{{ book.id }}#note-{{ note.location }}"
+                           target="_blank">Link</a>
+                    {% endif %}
+
+                        <div>
+                            {% if note.type == 'highlight' %}<mark>{{ note.annotation }}</mark>{% endif %}
+                            {% if note.type == 'note' %}{{ note.annotation }}{% endif %}
+                        </div>
+
+                    {% set nextNote = book.hightlights[loop.index0 + 1] %}
+                    {% if not nextNote or note.location != nextNote.location %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+{% endblock %}

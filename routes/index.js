@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
     });
 
     res.render('index', {
-        title: 'My books collection',
+        title: 'My book notes collection',
         books
     });
 });

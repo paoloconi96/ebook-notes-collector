@@ -7,82 +7,120 @@ const { v4: uuidv4 } = require('uuid');
 const database = require('../utils/database');
 const googleBooks = require('../utils/google-books')
 
+var books = require('google-books-search');
+
 router.get('/', async function (req, res, next) {
     res.render('add', {
-        title: 'Upload a new book',
+        title: 'Upload new book notes',
     });
 });
 
 router.post('/', function (req, res, next) {
-    var form = new multiparty.Form();
-    book = {
-        title: '',
-        author: '',
-        hightlights: [],
-    };
+    const form = new multiparty.Form();
+    let language;
 
     form.parse(req, function(err, fields, files) {
-        if (
-            !files ||
-            files.file.length === 0 ||
-            files.file[0].size === 0
-        ) {
+        if (!files || files.file.length === 0 || files.file[0].size === 0) {
             res.send('You need to provide a file.');
             return;
         }
 
-        const file = files.file[0];
-        let index = 0;
-        fs
-            .createReadStream(file.path)
-            .pipe(csv({
-                headers: ['type', 'location', 'marked', 'annotation'],
-            }))
-            .on('data', data => {
-                if (index < 8) {
-                    handleHeaderRow(data, index);
-                } else {
-                    handleBodyRow(data);
-                }
+        language = fields.language[0];
 
-                index++;
-            })
-            .on('end', async () => {
-                const googleSearchResult = await googleBooks.searchFirstResult(book.title);
+        files.file.forEach(file => {
+            const book = {
+                title: '',
+                author: '',
+                hightlights: [],
+            };
 
-                if (!googleSearchResult) {
-                    throw Error('stop');
-                }
-                const volumeInfo = googleSearchResult.volumeInfo;
+            let index = 0;
+            fs
+                .createReadStream(file.path)
+                .pipe(csv({
+                    headers: ['type', 'location', 'marked', 'annotation'],
+                }))
+                .on('data', data => {
+                    if (index < 8) {
+                        handleHeaderRow(data, index, book);
+                    } else {
+                        handleBodyRow(data, book);
+                    }
 
-                const db = database.get();
+                    index++;
+                })
+                .on('end', async () => {
+                    // Maybe data is already sorted?
+                    book.hightlights = book.hightlights.sort((a, b) => {
+                        if (a < b) {
+                            return -1;
+                        }
 
-                const bookDocument = db.collection('books').doc(uuidv4());
-                await bookDocument.set({
-                    title: volumeInfo.title,
-                    authors: volumeInfo.authors,
-                    publishedDate: volumeInfo.publishedDate,
-                    categories: volumeInfo.categories,
-                    imageLinks: volumeInfo.imageLinks,
-                    hightlights: book.hightlights,
-                });
+                        if (a > b) {
+                            return 1;
+                        }
 
-                res.redirect('/add');
-            })
-        ;
+                        return 0;
+                    });
+
+                    books.search(book.title.substr(0, 25), {
+                        field: 'title',
+                        type: 'books',
+                        lang: language,
+                    }, async (error, booksByTitle) => {
+                        if ( ! error ) {
+                            books.search(book.author, {
+                                field: 'author',
+                                type: 'books',
+                                lang: language,
+                            }, async (error, booksByAuthor) => {
+                                if ( ! error ) {
+                                    let googleBook;
+
+                                    for (let i = booksByTitle.length - 1; i >= 0; i--) {
+                                        for (let j = booksByAuthor.length - 1; j >= 0; j--) {
+                                            if (booksByTitle[i].id === booksByAuthor[j].id) {
+                                                googleBook = booksByTitle[i];
+                                            }
+                                        }
+                                    }
+
+                                    if (!googleBook) {
+                                        googleBook = booksByAuthor.length ? booksByAuthor[0] : booksByTitle[0];
+                                    }
+
+                                    const volumeInfo = googleBook;
+                                    const db = database.get();
+
+                                    const bookDocument = db.collection('books').doc(uuidv4());
+                                    await bookDocument.set({
+                                        title: volumeInfo.title,
+                                        authors: volumeInfo.authors,
+                                        publishedDate: volumeInfo.publishedDate,
+                                        categories: volumeInfo.categories ? volumeInfo.categories : null,
+                                        imageLinks: volumeInfo.thumbnail ? volumeInfo.thumbnail : null,
+                                        hightlights: book.hightlights,
+                                    });
+                                } else {
+                                    console.log(error);
+                                }
+                            });
+                        } else {
+                            console.log(error);
+                        }
+                    });
+                })
+            ;
+
+            // res.redirect('/');
+        })
     });
 });
-
-let book = {
-    title: '',
-    author: '',
-    hightlights: [],
-};
 
 const HIGHLIGHT_TYPE_HIGHLIGHT = 'highlight';
 const HIGHLIGHT_TYPE_NOTE = 'note';
 
-const handleHeaderRow = (row, index) => {
+const handleHeaderRow = (row, index, book) => {
     switch (index) {
         case 1:
             // title
@@ -96,7 +134,7 @@ const handleHeaderRow = (row, index) => {
     }
 }
 
-const handleBodyRow = (row) => {
+const handleBodyRow = (row, book) => {
     book.hightlights.push({
         type: row.type === 'Evidenziazione (Giallo)' ? HIGHLIGHT_TYPE_HIGHLIGHT : HIGHLIGHT_TYPE_NOTE,
         location: row.location.substr(row.location.indexOf(' ') + 1),

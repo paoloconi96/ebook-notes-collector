@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('ebook-highlights-collector:server');
+var debug = require('debug')('ebook-notes-collector:server');
 var http = require('http');
 
 /**
