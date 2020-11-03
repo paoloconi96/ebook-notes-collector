@@ -19,8 +19,8 @@
         </section>
         <section class="notes">
             <ul>
-                {% for note in book.hightlights %}
-                    {% set previousNote = book.hightlights[loop.index0 - 1] %}
+                {% for note in book.highlights %}
+                    {% set previousNote = book.highlights[loop.index0 - 1] %}
                     {% if not previousNote or note.location != previousNote.location %}
                         <li class="note" id="note-{{ note.location }}">
                         <em>Position: {{ note.location }}</em>
@@ -33,7 +33,7 @@
                             {% if note.type == 'note' %}{{ note.annotation }}{% endif %}
                         </div>
 
-                    {% set nextNote = book.hightlights[loop.index0 + 1] %}
+                    {% set nextNote = book.highlights[loop.index0 + 1] %}
                     {% if not nextNote or note.location != nextNote.location %}
                         </li>
                     {% endif %}
