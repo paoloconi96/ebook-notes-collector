@@ -1,0 +1,5 @@
+const googleApiKey = 'AIzaSyDo7l7QTTn1e523szT1lyUv8v-ErrE0S2g';
+
+module.exports = {
+    googleApiKey
+};

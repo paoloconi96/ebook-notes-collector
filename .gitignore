@@ -61,3 +61,6 @@ typings/
 .next
 
 _examples
+
+data/config.js
+data/google-service-account.json
