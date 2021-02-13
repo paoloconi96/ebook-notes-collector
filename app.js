@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Basic temporary authentication
 app.use(function (req, res, next) {
     const authToken = req.cookies['authToken'];
-    req.user = false;// authHandler.authTokens[authToken];
+    req.user = authHandler.authTokens[authToken];
     next();
 });
 
