@@ -5,9 +5,11 @@
 {% endblock %}
 
 {% block main_actions %}
-    <span>
-        <a href="/add">Add new book</a> / <a href="/add-highlights">Upload new highlights</a>
-    </span>
+    {% if authenticated %}
+        <span>
+            <a href="/add">Add new book</a> / <a href="/add-highlights">Upload new highlights</a>
+        </span>
+    {% endif %}
 {% endblock %}
 
 {% block body %}

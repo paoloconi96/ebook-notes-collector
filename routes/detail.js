@@ -26,11 +26,16 @@ router.get('/:bookId', async (req, res, next) => {
 
     res.render('detail', {
         title: 'My book notes collection',
-        book
+        book,
+        authenticated: !!req.user,
     });
 });
 
 router.get('/:bookId/delete', async (req, res, next) => {
+    if (!req.user) {
+        return;
+    }
+
     // Validate parameters
     const bookId = req.params.bookId
     if (!uuidValidate(bookId)) {

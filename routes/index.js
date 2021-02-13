@@ -17,7 +17,8 @@ router.get('/', async (req, res, next) => {
 
     res.render('index', {
         title: 'My book notes collection',
-        books
+        books,
+        authenticated: !!req.user,
     });
 });
 

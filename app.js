@@ -5,11 +5,14 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 const database = require('./utils/database');
+var bodyParser = require('body-parser');
+const authHandler = require('./utils/auth-handler')
 
 const indexRouter = require('./routes/index');
 const addRouter = require('./routes/add');
 const addHighlightsRouter = require('./routes/add-highlights');
 const detailRouter = require('./routes/detail');
+const loginRouter = require('./routes/login');
 
 const app = express();
 
@@ -30,10 +33,20 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Basic temporary authentication
+app.use(function (req, res, next) {
+    const authToken = req.cookies['authToken'];
+    req.user = false;// authHandler.authTokens[authToken];
+    next();
+});
+
 app.use('/', indexRouter);
 app.use('/add', addRouter);
 app.use('/add-highlights', addHighlightsRouter);
 app.use('/detail', detailRouter);
+app.use('/login', loginRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

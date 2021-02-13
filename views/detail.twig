@@ -4,10 +4,6 @@
     <link rel='stylesheet' href='/stylesheets/detail.css'/>
 {% endblock %}
 
-{% block main_actions %}
-    <a href="/add">(Upload new book)</a>
-{% endblock %}
-
 {% block body %}
     <main class="book">
         <section class="info">
@@ -40,10 +36,12 @@
                 {% endfor %}
             </ul>
         </section>
-        <hr>
-        <footer>
-            <em><a href="{{ book.id }}/delete">Delete</a></em>
-        </footer>
+        {% if authenticated %}
+            <hr>
+            <footer>
+                <em><a href="{{ book.id }}/delete">Delete</a></em>
+            </footer>
+        {% endif %}
 
         <script>
             document.querySelector('footer a').addEventListener('click', function(event) {
