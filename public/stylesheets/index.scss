@@ -10,3 +10,22 @@
 .cover {
     width: 100%;
 }
+
+.highlighted-book span,
+.regular-book span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 100px;
+    margin-right: 3px;
+    position: relative;
+    top: -1.5px;
+}
+
+.highlighted-book span {
+    background-color: #007CBE;
+}
+
+.regular-book span {
+    background-color: #00AF54;
+}

@@ -8,6 +8,7 @@ const database = require('./utils/database');
 
 const indexRouter = require('./routes/index');
 const addRouter = require('./routes/add');
+const addHighlightsRouter = require('./routes/add-highlights');
 const detailRouter = require('./routes/detail');
 
 const app = express();
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/add', addRouter);
+app.use('/add-highlights', addHighlightsRouter);
 app.use('/detail', detailRouter);
 
 // catch 404 and forward to error handler

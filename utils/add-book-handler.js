@@ -46,21 +46,25 @@ addBookHandler.addBook = async (file, language) => {
 
                 const volumeInfo = await bookGuesser.guessBook(book, language);
 
-                const db = database.get();
-
-                const bookDocument = db.collection('books').doc(uuidv4());
-                await bookDocument.set({
-                    title: volumeInfo.title,
-                    authors: volumeInfo.authors,
-                    publishedDate: volumeInfo.publishedDate,
-                    categories: volumeInfo.categories ? volumeInfo.categories : null,
-                    imageLinks: volumeInfo.thumbnail ? volumeInfo.thumbnail : null,
-                    highlights: book.highlights,
-                });
+                await addBookHandler.createVolumeInDatabase(volumeInfo, book);
 
                 resolve(volumeInfo);
             })
         ;
+    });
+}
+
+addBookHandler.createVolumeInDatabase = async (volumeInfo, book) => {
+    const db = database.get();
+
+    const bookDocument = db.collection('books').doc(uuidv4());
+    await bookDocument.set({
+        title: volumeInfo.title,
+        authors: volumeInfo.authors,
+        publishedDate: volumeInfo.publishedDate,
+        categories: volumeInfo.categories ? volumeInfo.categories : null,
+        imageLinks: volumeInfo.thumbnail ? volumeInfo.thumbnail : null,
+        highlights: book.highlights,
     });
 }
 

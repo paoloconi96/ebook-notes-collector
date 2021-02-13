@@ -9,14 +9,11 @@
 {% endblock %}
 
 {% block body %}
-    <form action="/add" method="post" enctype="multipart/form-data">
+    <form action="/add-highlights" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name">
-        </div>
-        <div class="form-group">
-            <label for="author">Author</label>
-            <input type="text" id="author" name="author">
+            <label>File CSV</label>
+            <input type="file" id="file" name="file" multiple>
+            <small>File must be in a compatible Kindle format.</small>
         </div>
         <div class="form-group">
             <label>Language</label>

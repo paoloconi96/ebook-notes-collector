@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block main_actions %}
-    <a href="/add">(Upload new book)</a>
+    <span>
+        <a href="/add">Add new book</a> / <a href="/add-highlights">Upload new highlights</a>
+    </span>
 {% endblock %}
 
 {% block body %}
@@ -14,9 +16,13 @@
             <li class="book" id="book-{{ book.id }}">
                 <a href="/detail/{{ book.id }}">
                     {% if book.imageLinks %}
-                        <img src="{{ book.imageLinks }}" alt="Cover" class="cover">
+                        <img src="{{ book.imageLinks }}" alt="Cover" class="cover" />
                     {% endif %}
-                    <strong>{{ book.title }}</strong> • <span>{{ book.authors }}</span>
+                    <strong class="{{ book.highlights.length > 0 ? 'highlighted-book' : 'regular-book' }}">
+                        <span></span> {{ book.title }}
+                    </strong>
+                    <br>
+                    <span>{{ book.authors }}</span>
                 </a>
             </li>
         {% endfor %}

@@ -40,5 +40,20 @@
                 {% endfor %}
             </ul>
         </section>
+        <hr>
+        <footer>
+            <em><a href="{{ book.id }}/delete">Delete</a></em>
+        </footer>
+
+        <script>
+            document.querySelector('footer a').addEventListener('click', function(event) {
+                if (confirm('Are you sure to delete this book from your collection?')) {
+                    return true;
+                }
+
+                event.preventDefault();
+                return false;
+            })
+        </script>
     </main>
 {% endblock %}
