@@ -1,4 +1,5 @@
 const googleBooksSearch = require('google-books-search');
+const bookRanker = require('./book-ranker');
 
 const bookGuesser = {};
 
@@ -48,6 +49,67 @@ bookGuesser.guessBook = async (book, language) => {
             if (guessedBook) {
                 resolve(guessedBook);
             }
+        });
+    });
+}
+
+bookGuesser.guessBookList = async (book, language) => {
+    const booksLists = await Promise.all([getBooksByAuthor(book, language), getBooksByTitle(book, language)]);
+
+    const finalBooksLists = [];
+    for (const booksList of booksLists) {
+        const list = [];
+
+        for (const book of booksList) {
+            if (!book.industryIdentifiers) {
+                continue;
+            }
+
+            for (const isbn of book.industryIdentifiers) {
+                if (isbn.type === 'ISBN_13') {
+                    book.isbn13 = isbn.identifier;
+
+                    list.push(book);
+                }
+            }
+        }
+
+        finalBooksLists.push(list);
+    }
+
+    return bookRanker.rankBooks(finalBooksLists);
+}
+
+const getBooksByTitle = async (book, language) => {
+    return new Promise((resolve, reject) => {
+        googleBooksSearch.search(book.title, {
+            field: 'title',
+            type: 'books',
+            lang: language,
+        }, async (error, booksByTitle) => {
+            if (error) {
+                reject(error);
+                console.error(error);
+            }
+
+            resolve(booksByTitle);
+        });
+    });
+}
+
+const getBooksByAuthor = async (book, language) => {
+    return new Promise((resolve, reject) => {
+        googleBooksSearch.search(book.author, {
+            field: 'author',
+            type: 'books',
+            lang: language,
+        }, async (error, booksByAuthor) => {
+            if (error) {
+                reject(error);
+                console.error(error);
+            }
+
+            resolve(booksByAuthor);
         });
     });
 }

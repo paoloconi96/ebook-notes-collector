@@ -42,13 +42,14 @@ addBookHandler.addBook = async (file, language) => {
                 handleBodyRow(data, book);
             })
             .on('end', async () => {
-                book.highlights = sortHighlights(book.highlights);
+                // book.highlights = sortHighlights(book.highlights);
 
-                const volumeInfo = await bookGuesser.guessBook(book, language);
+                // const volumeInfo = await bookGuesser.guessBook(book, language);
+                resolve(await bookGuesser.guessBookList(book, language));
 
-                await addBookHandler.createVolumeInDatabase(volumeInfo, book);
+                // await addBookHandler.createVolumeInDatabase(volumeInfo, book);
 
-                resolve(volumeInfo);
+                // resolve(volumeInfo);
             })
         ;
     });

@@ -33,4 +33,13 @@ a {
   padding: 5px 10px;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); }
 
+.card {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  margin: 15px 0; }
+
+.card-heading {
+  display: flex;
+  justify-content: space-between; }
+
 /*# sourceMappingURL=style.css.map */

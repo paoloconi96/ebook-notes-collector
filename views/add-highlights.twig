@@ -25,5 +25,21 @@
         <div class="form-group">
             <input type="submit" value="Submit">
         </div>
+
+        {% for book in books %}
+            <div class="card">
+                <div class="card-heading">
+                    <strong>
+                        {{ book.title }} -
+                        {% for author in book.authors %}
+                            {{ author }} {% if index.last %},{% endif %}
+                        {% endfor %}
+                        ({{ book.publishedDate }})
+                    </strong>
+                    <div>ISBN: {{ book.isbn13 }}</div>
+                </div>
+                <em><a href="{{ book.link }}">Link</a></em>
+            </div>
+        {% endfor %}
     </form>
 {% endblock %}

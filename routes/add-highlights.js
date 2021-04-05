@@ -4,9 +4,9 @@ const multiparty = require('multiparty');
 const addBookHandler = require('../utils/add-book-handler');
 
 router.get('/', async (req, res, next) => {
-    if (!req.user) {
-        return;
-    }
+    // if (!req.user) {
+    //     return;
+    // }
 
     res.render('add-highlights', {
         title: 'Upload new book notes',
@@ -14,9 +14,9 @@ router.get('/', async (req, res, next) => {
 });
 
 router.post('/', async (req, res, next) => {
-    if (!req.user) {
-        return;
-    }
+    // if (!req.user) {
+    //     return;
+    // }
 
     const form = new multiparty.Form();
     let language;
@@ -29,9 +29,13 @@ router.post('/', async (req, res, next) => {
 
         language = fields.language[0];
 
-        await addBookHandler.addBooks(files, language);
+        const books = await addBookHandler.addBook(files.file[0], language);
 
-        res.redirect('/?response=success');
+        res.render('add-highlights', {
+            title: 'Upload new book notes',
+            books
+        });
+        // res.redirect('/?response=success');
     });
 });
 
