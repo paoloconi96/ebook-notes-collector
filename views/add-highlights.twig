@@ -12,7 +12,8 @@
     <form action="/add-highlights" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label>File CSV</label>
-            <input type="file" id="file" name="file" multiple>
+            <input type="file" id="file" name="file" value="{{ files }}"
+            {% if draftBookId %}hidden{% endif %}>
             <small>File must be in a compatible Kindle format.</small>
         </div>
         <div class="form-group">
@@ -22,13 +23,15 @@
                 <option value="en">English</option>
             </select>
         </div>
+        <input type="hidden" name="draftBookId" value="{{ draftBookId }}">
         <div class="form-group">
             <input type="submit" value="Submit">
         </div>
 
         {% for book in books %}
-            <div class="card">
-                <div class="card-heading">
+            <input type="radio" name="book" id="book-{{ book.isbn13 }}" value="{{ book.isbn13 }}" hidden />
+            <label for="book-{{ book.isbn13 }}" class="card">
+                <span class="card-heading">
                     <strong>
                         {{ book.title }} -
                         {% for author in book.authors %}
@@ -36,10 +39,10 @@
                         {% endfor %}
                         ({{ book.publishedDate }})
                     </strong>
-                    <div>ISBN: {{ book.isbn13 }}</div>
-                </div>
+                    <span>ISBN: {{ book.isbn13 }}</span>
+                </span>
                 <em><a href="{{ book.link }}">Link</a></em>
-            </div>
+            </label>
         {% endfor %}
     </form>
 {% endblock %}

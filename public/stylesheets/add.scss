@@ -1,3 +1,7 @@
 .form-group {
     display: block;
 }
+
+input[type="radio"][name="book"]:checked + .card {
+    background-color: #ffea80;
+}

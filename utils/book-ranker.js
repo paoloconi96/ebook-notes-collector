@@ -13,8 +13,6 @@ bookRanker.rankBooks = (booksLists, weightedAverage = true) => {
     for (const [listIndex, booksList] of booksLists.entries()) {
         const divider = booksLists.length - listIndex;
         for (const [index, book] of booksList.entries()) {
-            console.log(book);
-
             let bookExtraStructure;
             if (weightedBooks.has(book.isbn13)) {
                 bookExtraStructure = weightedBooks.get(book.isbn13)

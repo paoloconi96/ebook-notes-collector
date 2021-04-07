@@ -53,6 +53,29 @@ bookGuesser.guessBook = async (book, language) => {
     });
 }
 
+/**
+ * Gets a book by it ISBN
+ * @TODO Ensure the result is always correct
+ * @TODO Fix me
+ *
+ * @param isbn
+ * @returns {Promise<void>}
+ */
+bookGuesser.getByIsbn = async (isbn) => {
+    await new Promise((resolve, reject) => {
+        googleBooksSearch.search(isbn, {
+            type: 'books',
+        }, async (error, books) => {
+            if (error || books.length === 0) {
+                reject(error);
+                console.error(error);
+            }
+
+            resolve(books[0]);
+        });
+    });
+}
+
 bookGuesser.guessBookList = async (book, language) => {
     const booksLists = await Promise.all([getBooksByAuthor(book, language), getBooksByTitle(book, language)]);
 
